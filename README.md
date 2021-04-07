@@ -101,11 +101,14 @@ These are some good starting points:
 
 Parts and equipment you will need to complete the hardware setup procedure:
 - Raspberry Pi 3B, 3B+, or 3A+ (other versions may work, but are not supported)
-- Good quality micro SD card (see https://www.raspberrypi.org/documentation/installation/sd-cards.md)
-- Good quality USB power supply (see https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md)
+- Good quality micro SD card
+  (see https://www.raspberrypi.org/documentation/installation/sd-cards.md)
+- Good quality USB power supply
+  (see https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md)
 - USB keyboard
 - Monitor and HDMI cable (see https://www.raspberrypi.org/documentation/setup/)
 - M2.5 x 11mm standoffs
+- Insulating tape with clean-removable adhesive (Kapton, Scotch 35, or similar)
 - Precursor Debug HAT with JTAG cable
 - Precursor
 
@@ -115,7 +118,8 @@ To follow the procedures described below, you will need:
 - ESD protection gear (wrist strap and work mat)
 - Screwdriver with T3 Torx bit
 - Spudger
-- Computer with micro SD port (see https://www.raspberrypi.org/documentation/installation/installing-images/README.md)
+- Computer with micro SD port
+  (see https://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
 ### Battery
 
@@ -129,19 +133,81 @@ cushion to accommodate normal battery pack swelling), see
 
 ### Raspberry Pi + Debug HAT
 
-Assemble Raspberry Pi and Debug HAT JTAG interface
+1. Prepare your ESD protected work area
+2. Attach two M2.5 x 11mm standoffs to the Debug HAT on the side of the board
+   opposite the 40-pin connector
+3. Connect the Debug HAT to your Raspberry Pi's GPIO connector
 
 ### JTAG Cable
 
-Connect Precursor and Debug HAT with JTAG cable
+*TODO: How to handle battery disconnect while gaining access to mainboard?
+Is it even possible? Is the upper FPC blocked by the keyboard overlay?*
+
+To attach the Precursor end of the JTAG cable:
+1. Remove Precursor Bezel (six Torx T3 screws)
+2. Remove keyboard overlay
+3. Genly pry the keyboard PCB straight up and set it aside (*TODO: screws?*)
+4. Use spudger to open the latch on the JTAG connector (just inside the bottom
+   edge of the case, to right of headset jack)
+5. Cover the row of gold contacts on one end of the JTAG cable with insulating
+   tape (to protect against ESD glitches or shorting power rails)
+6. Orient the JTAG cable with the printed side on top and the exposed gold
+   contacts on the bottom
+7. Insert the end of the JTAG cable with the exposed contacts through the slot
+   next to the headset jack and into the JTAG connector on the mainboard, making
+   sure the cable is fully seated
+8. Close the latch on the JTAG connector
+9. Replace the keyboard PCB, making sure the connector in the center-left
+   section of the PCB aligns with its matching connector on the mainboard
+10. Replace the keyboard overlay
+11. Replace the front bezel (six T3 screws)
+
+To attach the Raspberry Pi end of the JTAG cable:
+1. Make sure the Raspberry Pi power supply is disconnected
+2. Use spudger to open the latch of the JTAG connector on the Debug Hat
+3. Remove insulating tape from the JTAG cable (avoid shorting exposed contacts)
+4. Insert JTAG cable (gold contacts facing down) into the JTAG connector
+5. Close the JTAG connector latch
 
 
 ## Software Setup
 
 ### SD Card with Raspberry Pi OS
 
-See https://www.raspberrypi.org/software/
+First, please be sure to follow the Raspberry Pi Foundation's advice on
+sourcing a suitable [SD card][pi_sd] and [power supply][pi_ps]. Poor quality SD
+cards and inadequate power supplies commonly cause Raspberry Pi problems.
 
+[pi_sd]: https://www.raspberrypi.org/documentation/installation/sd-cards.md
+[pi_ps]: https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md
+
+1. Download a "Raspberry Pi OS **Lite**" operating system SD card image from
+   https://www.raspberrypi.org/software/operating-systems/
+2. Next to the Download button, use the SHA256 link to get the file integrity
+   hash for the operating system image zip file you just downloaded
+3. Verify the zip file against the hash, and re-download if there's a problem.
+4. Flash the OS image onto your micro SD card following the instructions at
+   https://www.raspberrypi.org/documentation/installation/installing-images/README.md
+5. Insert the micro SD card into your Raspberry Pi, being careful not to
+   unplug or damage the JTAG debug cable
+6. Connect your HDMI monitor and USB keyboard to the Pi
+7. Connect power to the Pi
+8. Log in (u:pi, p:raspberry)
+9. Set a proper password with `passwd`
+   (see https://www.raspberrypi.org/documentation/linux/usage/users.md)
+10. Run `sudo raspi-config` (*TODO: more specific details of menu navigation*)
+    - Localization Options: locale, country code, timezone
+    - hostname
+    - wifi (see https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
+    - ssh
+11. *(optional)* Add ssh public keys to `~/.ssh/authorized_keys`
+12. Run `sudo apt update` to refresh the package index
+13. Run `sudo apt upgrade` to install updates
+14. Reboot
+15. ... ? (*TODO*)
+
+Alternate setup method: headless setup without keyboard or monitor:
+- see https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
 ### Install JTAG Packages
 
 See https://github.com/im-tomu/fomu-flash
