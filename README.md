@@ -102,8 +102,10 @@ These are some good starting points:
 Parts and equipment you will need to complete the hardware setup procedure:
 - Raspberry Pi 3B, 3B+, or 3A+ (other versions may work, but are not supported)
 - Good quality micro SD card (see https://www.raspberrypi.org/documentation/installation/sd-cards.md)
+- Good quality USB power supply (see https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md)
+- USB keyboard
+- Monitor and HDMI cable (see https://www.raspberrypi.org/documentation/setup/)
 - M2.5 x 11mm standoffs
-- Good quality 2.5A USB power supply for the Raspberry Pi (don't use a cheap phone charger)
 - Precursor Debug HAT with JTAG cable
 - Precursor
 
@@ -113,6 +115,7 @@ To follow the procedures described below, you will need:
 - ESD protection gear (wrist strap and work mat)
 - Screwdriver with T3 Torx bit
 - Spudger
+- Computer with micro SD port (see https://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
 ### Battery
 
