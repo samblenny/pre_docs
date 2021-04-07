@@ -83,7 +83,7 @@ Long answer: Read the description and updates at https://precursor.dev
 
 ### Can't the JTAG port bypass Precursor's security?
 
-That's why the production run will ship with a packet of epoxy.
+The production run will ship with a packet of epoxy.
 
 ### Where can I learn more?
 
