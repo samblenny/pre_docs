@@ -186,7 +186,7 @@ cards and inadequate power supplies commonly cause Raspberry Pi problems.
 1. Download a "Raspberry Pi OS **Lite**" operating system SD card image from
    https://www.raspberrypi.org/software/operating-systems/
 2. Next to the Download button, use the SHA256 link to get the file integrity
-   hash for the operating system image zip file you just downloaded
+   hash for the zip file you just downloaded
 3. Verify the zip file against the hash, and re-download if there's a problem.
 4. Flash the OS image onto your micro SD card following the instructions at
    https://www.raspberrypi.org/documentation/installation/installing-images/README.md
