@@ -108,7 +108,7 @@ Parts and equipment you will need to complete the hardware setup procedure:
 - USB keyboard
 - Monitor and HDMI cable (see https://www.raspberrypi.org/documentation/setup/)
 - M2.5 x 11mm standoffs
-- Insulating tape with clean-removable adhesive (Kapton, Scotch 35, or similar)
+- Insulating tape with clean-removal adhesive (Kapton, Scotch 35, or similar)
 - Precursor Debug HAT with JTAG cable
 - Precursor
 
