@@ -140,8 +140,10 @@ cushion to accommodate normal battery pack swelling), see
 
 ### JTAG Cable
 
-*TODO: How to handle battery disconnect while gaining access to mainboard?
-Is it even possible? Is the upper FPC blocked by the keyboard overlay?*
+*TODO: How to handle battery disconnect while gaining access to mainboard?*
+- *Is it even possible?*
+- *Is the upper FPC connector blocked by the keyboard overlay?*
+- *What about the final production mainboard battery connector?*
 
 To attach the Precursor end of the JTAG cable:
 1. Remove Precursor Bezel (six Torx T3 screws)
