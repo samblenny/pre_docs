@@ -75,7 +75,7 @@ Medium answer: The goal is to use a low-power ICE40UP5K in the untrusted domain
 to listen for incoming radio traffic and act as a network firewall to filter
 out irrelevant packets. That will hopefully allow the power hungry XC7S50
 (Xilinx Spartan 7) to spend most of its time in a deep low power mode. The
-trusted domain neds the Spartan 7 to provide enough capacity for compute
+trusted domain needs the Spartan 7 to provide enough capacity for compute
 intensive encrypted chat protocols. The Spartan 7 also has electrical control
 over the keyboard and display.
 
