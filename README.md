@@ -71,13 +71,13 @@ Short answer: Spliting features between two FPGAs helps to save power and
 provide physical separation of device features into trusted and untrusted
 security domains.
 
-Medium answer: The goal is to use a low-power ICE40UP5K in the untrusted domain
-to listen for incoming radio traffic and act as a network firewall to filter
-out irrelevant packets. That will hopefully allow the power hungry XC7S50
-(Xilinx Spartan 7) to spend most of its time in a deep low power mode. The
-trusted domain needs the Spartan 7 to provide enough capacity for compute
-intensive encrypted chat protocols. The Spartan 7 also has electrical control
-over the keyboard and display.
+Medium answer: The goal is to use a low-power Lattice iCE40UP5K in the
+untrusted domain to listen for incoming traffic and filter out irrelevant
+packets. If successful, that will allow the power hungry XC7S50 (Xilinx Spartan
+7) to spend most of its time in a deep low power mode. The trusted domain needs
+the Spartan 7 to provide enough capacity for compute intensive encrypted chat
+protocols. The Spartan 7 also has electrical control over the keyboard and
+display to keep them isolated from the radio module.
 
 Long answer: Read the description and updates at https://precursor.dev
 
