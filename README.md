@@ -101,7 +101,7 @@ These are some good starting points:
 
 Parts and equipment you will need to complete the hardware setup procedure:
 - Raspberry Pi 3B, 3B+, or 3A+ (other versions may work, but are not supported)
-- Good quality SD card (see https://www.raspberrypi.org/documentation/installation/sd-cards.md)
+- Good quality micro SD card (see https://www.raspberrypi.org/documentation/installation/sd-cards.md)
 - M2.5 x 11mm standoffs
 - Good quality 2.5A USB power supply for the Raspberry Pi (don't use a cheap phone charger)
 - Precursor Debug HAT with JTAG cable
