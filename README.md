@@ -5,18 +5,19 @@ Unofficial developer documentation for Precursor.
 ## Contents
 
 1. [Overview](#overview)
-2. [Hardware Setup](#hardware-setup)
+2. [Glossary of Precursor Project Jargon](#glossary-of-precursor-project-jargon)
+3. [Hardware Setup](#hardware-setup)
    1. [Parts List](#parts-list)
    2. [Recommended Tools](#recommended-tools)
    3. [Battery](#battery)
    4. [Raspberry Pi + Debug HAT](#raspberry-pi--debug-hat)
    5. [JTAG Cable](#jtag-cable)
-3. [Software Setup](#software-setup)
+4. [Software Setup](#software-setup)
    1. [SD Card with Raspberry Pi OS](#sd-card-with-raspberry-pi-os)
    2. [Install JTAG Packages](#install-jtag-packages)
    3. [Get Validation Firmware](#get-validation-firmware)
    4. [Get Firmware Programming Scripts](#get-firmware-programming-scripts)
-4. [Flashing Firmware](#flashing-firmware)
+5. [Flashing Firmware](#flashing-firmware)
 
 
 ## Overview
@@ -81,7 +82,19 @@ display to keep them isolated from the radio module.
 
 Long answer: Read the description and updates at https://precursor.dev
 
-### What Precursor project FPGA jargon should I know about?
+### Where can I learn more?
+
+Information about Precursor is spread around a bit.
+
+These are some good starting points:
+- https://precursor.dev
+- https://github.com/betrusted-io/betrusted-wiki/wiki
+- https://github.com/betrusted-io
+
+## Glossary of Precursor Project Jargon
+
+To understand the code and documentation in the [Precursor repositories][repos]
+on GitHub, it helps to be familiar with the following terms:
 
 - **EC**, short for Embedded Controller, refers to the combination of the iCE40
   FPGA and its gateware configured with a PicoRV32 RISC-V core. EC denotes the
@@ -95,17 +108,32 @@ Long answer: Read the description and updates at https://precursor.dev
   keyboard input and display output, and it runs OS and application code. See
   [What is a System-on-Chip (SoC), and Why Do We Care if They are Open Source?][SoC]
 
+- *FPC* is short for Flexible Printed Circuit. Precursor uses three flexible
+  printed circuits inside the case as cables to connect components. Two FPCs
+  connect the display and backlight to the mainboard. Another FPC, sometimes
+  referred to as "the FPC", connects the mainboard to GPIO breakout pads,
+  battery pads (some mainboard revisions use other battery connectors),
+  vibration motor, and speaker. The JTAG debug cable is also an FPC.
+
+- *EVT*, *DVT*, and *PVT* are short for Engineering Validation Test, Design
+  Validation Test, and Production Validation Test. EVT, DVT, and PVT are often
+  used in the engineering and manufacturing of consumer electronics products to
+  denote iterative phases of prototyping. "Test" refers to making a design,
+  producing a small batch of prototypes according to that design, evaluating
+  the prototypes, then using what was learned to create an improved design
+  revision.
+
+  The important thing to understand when looking at Precursor design files on
+  GitHub, is that files labeled EVT or DVT are for early design revisions. The
+  final, or nearly final, revisions will be labeled PVT. Changes can still
+  happen in the PVT phase for reasons like correcting problems with
+  manufacturing yield. Photographs of PVT prototypes may not match the final
+  PVT design revision that ships to campaign backers. In particular, the final
+  production run will have a custom battery pack.
+
 [EC]: https://www.bunniestudios.com/blog/?p=5942
 [SoC]: https://www.bunniestudios.com/blog/?p=5971
-
-### Where can I learn more?
-
-Information about Precursor is spread around a bit.
-
-These are some good starting points:
-- https://precursor.dev
-- https://github.com/betrusted-io/betrusted-wiki/wiki
-- https://github.com/betrusted-io
+[repos]: https://github.com/betrusted-io
 
 
 ## Hardware Setup
