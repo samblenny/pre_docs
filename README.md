@@ -161,7 +161,7 @@ cushion to accommodate normal battery pack swelling), see
 To attach the Precursor end of the JTAG cable:
 1. Remove Precursor Bezel (six Torx T3 screws)
 2. Remove keyboard overlay
-3. Genly pry the keyboard PCB straight up and set it aside (*TODO: screws?*)
+3. Gently pry the keyboard PCB straight up and set it aside (*TODO: screws?*)
 4. Use spudger to open the latch on the JTAG connector (just inside the bottom
    edge of the case, to right of headset jack)
 5. Cover the row of gold contacts on one end of the JTAG cable with insulating
