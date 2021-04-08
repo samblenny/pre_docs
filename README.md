@@ -153,7 +153,7 @@ not to short power rail connections on the exposed traces.
 2. When an FPC with an attached battery is disconnected from the mainboard,
    **cover the exposed FPC traces with insulating tape.**
 
-3. You will need to remove the keyboard PCB for access the mainboard FPC
+3. You will need to remove the keyboard PCB for access to the mainboard FPC
    connector latches. It should be fine to remove or install the keyboard while
    the battery is still connected, just be careful not to short anything on the
    mainboard while handling the keyboard.
