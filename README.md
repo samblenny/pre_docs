@@ -87,16 +87,16 @@ Long answer: Read the description and updates at https://precursor.dev
   FPGA and its gateware configured with a PicoRV32 RISC-V core. EC denotes the
   place where the firmware features of Precursor's untrusted domain are
   implemented. The EC manages battery charging and the wifi radio, among other
-  things. See [A Guided Tour of the Precursor Motherboard][EC].
+  things. See [Guided Tour of the Precursor Motherboard][EC].
 
 - **SoC** refers to the combination of the Spartan 7 FPGA and its gateware
-  configured with a VexRISC-V core and crypto accelerators. SoC denotes the
-  place where firmware for Precursor's trusted domain runs. The SoC manages
+  configured with a VexRISC-V RV32IMAC core and crypto accelerators. SoC denotes
+  the place where firmware for Precursor's trusted domain runs. The SoC manages
   keyboard input and display output, and it runs OS and application code. See
-  [A Guided Tour of the Precursor System on Chip (SoC)][SoC].
+  [What is a System-on-Chip (SoC), and Why Do We Care if They are Open Source?][SoC].
 
-[EC]: https://www.crowdsupply.com/sutajio-kosagi/precursor/updates/a-guided-tour-of-the-precursor-motherboard
-[SoC]: https://www.crowdsupply.com/sutajio-kosagi/precursor/updates/a-guided-tour-of-the-precursor-system-on-chip-soc
+[EC]: https://www.bunniestudios.com/blog/?p=5942
+[SoC]: https://www.bunniestudios.com/blog/?p=5971
 
 ### Where can I learn more?
 
