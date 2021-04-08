@@ -93,7 +93,7 @@ Long answer: Read the description and updates at https://precursor.dev
   configured with a VexRISC-V RV32IMAC core and crypto accelerators. SoC denotes
   the place where firmware for Precursor's trusted domain runs. The SoC manages
   keyboard input and display output, and it runs OS and application code. See
-  [What is a System-on-Chip (SoC), and Why Do We Care if They are Open Source?][SoC].
+  [What is a System-on-Chip (SoC), and Why Do We Care if They are Open Source?][SoC]
 
 [EC]: https://www.bunniestudios.com/blog/?p=5942
 [SoC]: https://www.bunniestudios.com/blog/?p=5971
