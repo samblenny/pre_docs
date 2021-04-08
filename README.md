@@ -85,9 +85,9 @@ Long answer: Read the description and updates at https://precursor.dev
 
 - **EC**, short for Embedded Controller, refers to the combination of the iCE40
   FPGA and its gateware configured with a PicoRV32 RISC-V core. EC denotes the
-  place where the firmware features of Precursor's untrusted domain are
-  implemented. The EC manages battery charging and the wifi radio, among other
-  things. See [Guided Tour of the Precursor Motherboard][EC].
+  place where firmware for Precursor's untrusted domain runs. The EC manages
+  battery charging and the wifi radio, among other things. See
+  [Guided Tour of the Precursor Motherboard][EC].
 
 - **SoC** refers to the combination of the Spartan 7 FPGA and its gateware
   configured with a VexRISC-V RV32IMAC core and crypto accelerators. SoC denotes
