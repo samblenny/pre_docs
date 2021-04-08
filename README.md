@@ -225,7 +225,7 @@ Alternate setup method: headless setup without keyboard or monitor:
 - see https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
 ### Install JTAG Packages
 
-See https://github.com/im-tomu/fomu-flash
+See https://github.com/im-tomu/fomu-flash and https://github.com/betrusted-io/jtag-trace
 
 ### Get Validation Firmware
 
@@ -234,6 +234,12 @@ See https://github.com/betrusted-io/betrusted-soc
 ### Get Firmware Programming Scripts
 
 See https://github.com/betrusted-io/betrusted-scripts
+- Main scripts are `provision-fw.sh`, `provision-xous.sh`, `config_up5k.sh`,
+  and `wfx_firmware.sh`
+- Scripts depend on `jtag-tools`, `fomu-flash`, and `wishbone-tool`
+- betrusted-scripts repo gets the `jtag-tools` dependency by including
+  [betrusted-io/jtag-trace](https://github.com/betrusted-io/jtag-trace)
+  as a submodule (needs recursive clone)
 
 
 ## Flashing Firmware
