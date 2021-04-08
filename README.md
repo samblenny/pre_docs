@@ -7,11 +7,12 @@ Unofficial developer documentation for Precursor.
 1. [Overview](#overview)
 2. [Glossary of Precursor Project Jargon](#glossary-of-precursor-project-jargon)
 3. [Hardware Setup](#hardware-setup)
-   1. [Parts List](#parts-list)
-   2. [Recommended Tools](#recommended-tools)
-   3. [Battery](#battery)
-   4. [Raspberry Pi + Debug HAT](#raspberry-pi--debug-hat)
-   5. [JTAG Cable](#jtag-cable)
+   1. [Battery and FPC Handling Precautions](#-battery-and-fpc-handling-precautions-)
+   2. [Parts List](#parts-list)
+   3. [Recommended Tools](#recommended-tools)
+   4. [Battery](#battery)
+   5. [Raspberry Pi + Debug HAT](#raspberry-pi--debug-hat)
+   6. [JTAG Cable](#jtag-cable)
 4. [Software Setup](#software-setup)
    1. [SD Card with Raspberry Pi OS](#sd-card-with-raspberry-pi-os)
    2. [Install JTAG Packages](#install-jtag-packages)
@@ -108,20 +109,20 @@ on GitHub, it helps to be familiar with the following terms:
   keyboard input and display output, and it runs OS and application code. See
   [What is a System-on-Chip (SoC), and Why Do We Care if They are Open Source?][SoC]
 
-- *FPC* is short for Flexible Printed Circuit. Precursor uses three flexible
+- **FPC** is short for Flexible Printed Circuit. Precursor uses three flexible
   printed circuits inside the case as cables to connect components. Two FPCs
   connect the display and backlight to the mainboard. Another FPC, sometimes
   referred to as "the FPC", connects the mainboard to GPIO breakout pads,
   battery pads (some mainboard revisions use other battery connectors),
   vibration motor, and speaker. The JTAG debug cable is also an FPC.
 
-- *EVT*, *DVT*, and *PVT* are short for Engineering Validation Test, Design
-  Validation Test, and Production Validation Test. EVT, DVT, and PVT are often
-  used in the engineering and manufacturing of consumer electronics products to
-  denote iterative phases of prototyping. "Test" refers to making a design,
-  producing a small batch of prototypes according to that design, evaluating
-  the prototypes, then using what was learned to create an improved design
-  revision.
+- **EVT**, **DVT**, and **PVT** are short for Engineering Validation Test,
+  Design Validation Test, and Production Validation Test. EVT, DVT, and PVT are
+  often used in the engineering and manufacturing of consumer electronics
+  products to denote iterative phases of prototyping. "Test" refers to making a
+  design, producing a small batch of prototypes according to that design,
+  evaluating the prototypes, then using what was learned to create an improved
+  design revision.
 
   The important thing to understand when looking at Precursor design files on
   GitHub, is that files labeled EVT or DVT are for early design revisions. The
@@ -137,6 +138,32 @@ on GitHub, it helps to be familiar with the following terms:
 
 
 ## Hardware Setup
+
+### 🔥 Battery and FPC Handling Precautions 🔥
+
+**WARNING**: When handling partially unplugged FPC cable assemblies, be careful
+not to short power rail connections on the exposed traces.
+
+1. Some prototype revisions use FPC solder pads for the battery connection. To
+   disconnect those batteries, you need to unplug the FPC from the mainboard.
+   When you insert or remove the FPC, be sure to keep it pointed straight
+   relative to the FPC connector. Orienting the FPC diagonally in the connector
+   could short adjacent traces.
+
+2. When an FPC with an attached battery is disconnected from the mainboard,
+   **cover the exposed FPC traces with insulating tape.**
+
+3. You will need to remove the keyboard PCB for access the mainboard FPC
+   connector latches. It should be fine to remove or install the keyboard while
+   the battery is still connected, just be careful not to short anything on the
+   mainboard while handling the keyboard.
+
+4. The JTAG debug cable and USB-C port both connect to power rails on the
+   mainboard. When the JTAG cable is connected to the Debug HAT, it is safe to
+   also connect USB-C, because the Debug HAT will prevent USB-C power from
+   reaching the Raspberry Pi. **But**, if you have the Debug HAT end of the
+   JTAG cable disconnected, **cover the exposed FPC traces with insulating
+   tape.**
 
 ### Parts List
 
@@ -180,6 +207,10 @@ cushion to accommodate normal battery pack swelling), see
 3. Connect the Debug HAT to your Raspberry Pi's GPIO connector
 
 ### JTAG Cable
+
+**WARNING**: If you haven't already, please read the
+[Battery and FPC Handling Precautions](#-battery-and-fpc-handling-precautions-)
+section above.
 
 *TODO: How to handle battery disconnect while gaining access to mainboard?*
 - *Is it even possible?*
