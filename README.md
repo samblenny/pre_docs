@@ -81,9 +81,22 @@ display to keep them isolated from the radio module.
 
 Long answer: Read the description and updates at https://precursor.dev
 
-### Can't the JTAG port bypass Precursor's security?
+### What Precursor project FPGA jargon should I know about?
 
-The production run will ship with a packet of epoxy.
+- **EC**, short for Embedded Controller, refers to the combination of the iCE40
+  FPGA and its gateware configured with a PicoRV32 RISC-V core. EC denotes the
+  place where the firmware features of Precursor's untrusted domain are
+  implemented. The EC manages battery charging and the wifi radio, among other
+  things. See [A Guided Tour of the Precursor Motherboard][EC].
+
+- **SoC** refers to the combination of the Spartan 7 FPGA and its gateware
+  configured with a VexRISC-V core and crypto accelerators. SoC denotes the
+  place where firmware for Precursor's trusted domain runs. The SoC manages
+  keyboard input and display output, and it runs OS and application code. See
+  [A Guided Tour of the Precursor System on Chip (SoC)][SoC].
+
+[EC]: https://www.crowdsupply.com/sutajio-kosagi/precursor/updates/a-guided-tour-of-the-precursor-motherboard
+[SoC]: https://www.crowdsupply.com/sutajio-kosagi/precursor/updates/a-guided-tour-of-the-precursor-system-on-chip-soc
 
 ### Where can I learn more?
 
