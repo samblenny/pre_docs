@@ -302,3 +302,10 @@ See https://github.com/betrusted-io/betrusted-scripts
 
 
 ## Flashing Firmware
+
+
+
+## License
+
+Dual licensed under the terms of [Apache 2.0](LICENSE-APACHE) or
+[MIT](LICENSE-MIT), at your option.
