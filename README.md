@@ -98,10 +98,14 @@ To understand the code and documentation in the [Precursor repositories][repos]
 on GitHub, it helps to be familiar with the following terms:
 
 - **EC**, short for Embedded Controller, refers to the combination of the iCE40
-  FPGA and its gateware configured with a PicoRV32 RISC-V core. EC denotes the
-  place where firmware for Precursor's untrusted domain runs. The EC manages
-  battery charging and the wifi radio, among other things. See
-  [Guided Tour of the Precursor Motherboard][EC].
+  FPGA and its gateware configured with a Litex VexRISC-V "[minimal]" RV32I
+  core and an SPI controller from [PicoRV32]. EC denotes the place where
+  firmware for Precursor's untrusted domain runs. The EC manages battery
+  charging and the wifi radio, among other things.
+  See [Guided Tour of the Precursor Motherboard][EC].
+
+  [minimal]: https://github.com/betrusted-io/betrusted-ec/blob/d167b75b7127a930e7602ed8d7bf40dec200662f/betrusted_ec.py#L790-L792
+  [PicoRV32]: https://github.com/cliffordwolf/picorv32
 
 - **SoC** refers to the combination of the Spartan 7 FPGA and its gateware
   configured with a VexRISC-V RV32IMAC core and crypto accelerators. SoC denotes
