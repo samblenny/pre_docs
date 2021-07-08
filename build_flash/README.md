@@ -15,7 +15,7 @@
 
 ## Build
 
-Use the [Makefile](Makefile) in this directory to orchestrate building out of `betrusted-ec`
+Use the [Makefile](Makefile) in this directory to orchestrate building of `betrusted-ec`
 and `xous-core`.
 
 If you want to use forks instead of the betrusted-io upstreams, do your own clones before
@@ -90,7 +90,7 @@ terminal emulator.
 4. For a Xous serial monitor (mux set for XC7S UART), do this:
    ```
    cd ~/code/betrusted-scripts
-   uart_fpga.sh
+   ./uart_fpga.sh
    screen /dev/serial0 115200
    ```
    To exit screen, type Ctrl-a k y
@@ -104,18 +104,58 @@ terminal emulator.
 This is more complicated because the EC debug serial port can be tunneled through
 wishbone-bridge. If you want to try the EC serial monitor, first you need to read
 this: https://github.com/betrusted-io/betrusted-ec/blob/main/README.adoc#debugging-notes
-Really... please read it.
+-- really, please read it.
 
 1. Make sure you can successfully use the Xous Serial Monitor procedure.
 
-2. Install fomu-toolchain to get wishbone-tool (see precursor & fomu docs)
-   You will need to build wishbone-tool from source. It will be slow. Sorry.
-   See https://github.com/betrusted-io/betrusted-ec/blob/main/README.adoc
+2. Build wishbone-tool for Raspberry Pi using the upstream source at
+   litex/wishbone-utils rather than fomu-toolchain. SSH to the Pi. If you haven't
+   installed rust, do so:
+   ```
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   # Update your PATH (or you can log out an log back in)
+   source ~/.cargo/env
+   ```
+   Then clone wishbone-utils and build wishbone-tool. This may take about 10
+   minutes depending on which Raspberry Pi you have, what the SD card is like,
+   and so on:
+   ```
+   cd ~/code
+   git clone https://github.com/litex-hub/wishbone-utils.git
+   cd wishbone-utils/wishbone-tool/
+   cargo build --release
+   cp target/release/wishbone-tool ~/.cargo/bin
+   ```
+   You can read more context about wishbone-tool at:
+   - https://github.com/betrusted-io/betrusted-ec/blob/main/README.adoc
+   - https://wishbone-utils.readthedocs.io/en/latest/wishbone-tool/
+   - https://github.com/litex-hub/wishbone-utils
 
-3. Try something like this... (untested as I haven't built wishbone-tool yet)
+3. On your build machine, rebuild `bc-ec.bin` after editing
+   `betrusted-ec/betrusted_ec.py` to enable the wishbone bus crossover UART.
+   [TODO: how to enable the UART properly???]
+
+4. Copy `bc-ec.bin` from your build machine to your Raspberry Pi.
+
+5. Flash the EC firmware and start the wishbone-tool serial terminal bridge:
    ```
    cd ~/code/betrusted-scripts
-   uart_up5k.sh
-   wishbone-tool --serial /dev/serial0 -s terminal --csr-csv ../precursors/csr.csv
+   ./uart_up5k.sh && RUST_LOG=debug wishbone-tool --serial /dev/serial0 -s terminal --csr-csv ../precursors/csr.csv
    ```
-   To exit the wishbone-tool serial monitor, type Ctrl-c.
+   To exit the wishbone-tool serial monitor, assuming it connected okay, you
+   can type Ctrl-c. If that works, you can remove the `RUST_LOG=debug`.
+
+   If Ctrl-c doesn't work and you see lots of debug messages about serial port
+   timeouts, wishbone-tool is attempting and failing to connect to the UART.
+   This probably means you need to re-build the EC gateware (`bt-ec.bin`) with
+   a different configuration (crossover UART is probably not enabled).
+
+   If the crossover UART didn't connect, you won't be able to use Ctrl-c to
+   kill wishbone-tool. In that case, make another terminal tab, SSH to another
+   shell on your Pi, and do this to kill the wishbone-tool process:
+   ```
+   $ ps x | grep wishbone-tool
+   2139 pts/0    Sl+    0:00 wishbone-tool --serial /dev/serial0 -s terminal --csr-csv ../precursors/csr.csv
+   2407 pts/1    S+     0:00 grep --color=auto wishbone-tool
+   $ kill 2139
+   ```
