@@ -4,6 +4,7 @@ HW_IMG=xous-core/target/riscv32imac-unknown-none-elf/release/xous.img
 LOADER=xous-core/target/riscv32imac-unknown-none-elf/release/loader.bin
 XC7S_GATEWARE=xous-core/precursors/soc_csr.bin
 UP5K_GATEWARE=betrusted-ec/target/riscv32i-unknown-none-elf/release/bt-ec.bin
+UP5K_CSR=betrusted-ec/build/csr.csv
 
 help:
 	@echo Sorry, this is a work in progress.
@@ -11,7 +12,7 @@ help:
 
 # Build all the binaries and gather them into precursors/
 bin: precursors $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE)
-	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) precursors/
+	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
 
 # Build EC image
 $(UP5K_GATEWARE): betrusted-ec icestorm-tools ubuntu-packages rust-tools
