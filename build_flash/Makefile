@@ -17,6 +17,7 @@ bin: precursors $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE)
 # Build EC image
 $(UP5K_GATEWARE): betrusted-ec icestorm-tools ubuntu-packages rust-tools
 	cd betrusted-ec; python3 ./betrusted_ec.py --revision=pvt
+	cd betrusted-ec; cargo xtask copy-precursors
 	cd betrusted-ec; cargo xtask hw-image
 
 # Build Xous image: loader + OS + application
