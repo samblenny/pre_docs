@@ -101,10 +101,14 @@ terminal emulator.
 
 ## EC Serial Monitor
 
-This is more complicated because the EC debug serial port can be tunneled through
-wishbone-bridge. If you want to try the EC serial monitor, first you need to read
-this: https://github.com/betrusted-io/betrusted-ec/blob/main/README.adoc#debugging-notes
+This is more complicated because the EC debug serial port pins are shared with
+keyboard scanning pins (subject to gateware build-time settings). And, the
+UART, when enabled, is tunneled through a wishbone-bridge. If you want to try
+the EC serial monitor, first you should read this:
+https://github.com/betrusted-io/betrusted-ec/blob/main/README.adoc#debugging-notes
 -- really, please read it.
+
+### Initial Setup
 
 1. Make sure you can successfully use the Xous Serial Monitor procedure.
 
@@ -131,31 +135,138 @@ this: https://github.com/betrusted-io/betrusted-ec/blob/main/README.adoc#debuggi
    - https://wishbone-utils.readthedocs.io/en/latest/wishbone-tool/
    - https://github.com/litex-hub/wishbone-utils
 
-3. On your build machine, rebuild `bc-ec.bin` after editing
-   `betrusted-ec/betrusted_ec.py` to enable the wishbone bus crossover UART.
-   [TODO: how to enable the UART properly???]
 
-4. Copy `bc-ec.bin` from your build machine to your Raspberry Pi.
+### Test wishbone-tool connectivity
 
-5. Flash the EC firmware and start the wishbone-tool serial terminal bridge:
+This will check that you can talk to the EC gateware over the Pi GPIO serial
+port using wishbone-tool to check the EC's git revision register.
+
+1. On your build machine, edit `betrusted-ec/betrusted_ec.py` to enable the
+   wishbone-bridge on the EC's UART pins: First, find the code at around line
+   560 with:
+   ```
+   debugonly = False
+
+   if debugonly:
+       self.submodules.uart_bridge = UARTWishboneBridge(...
+   ```
+   Then change `debugonly = False` to `debugonly = True`. This change will turn
+   off the keyboard scan muxing on the serial port pins. The tradeoff is that
+   you get reliable serial connectivity, but using the power-on key combo will
+   not work to wake from sleep mode until you revert the change and re-build the
+   EC gateware.
+
+2. On your build machine, run a `make bin` to rebuild the binaries.
+
+3. On your dev workstation, copy the new binaries to your Pi with scp.
+
+4. On your Pi, flash the new EC gateware:
    ```
    cd ~/code/betrusted-scripts
-   ./uart_up5k.sh && RUST_LOG=debug wishbone-tool --serial /dev/serial0 -s terminal --csr-csv ../precursors/csr.csv
+   ./config_up5k.sh
    ```
-   To exit the wishbone-tool serial monitor, assuming it connected okay, you
-   can type Ctrl-c. If that works, you can remove the `RUST_LOG=debug`.
+   To reliably make a wishbone-bridge connection, you must **start**
+   **wishbone-tool in the window from 50ms to 2000ms after an EC reset.**
+   Otherwise, wishbone-tool will generate many lines like
+   ```
+   ERROR [wishbone_bridge::bridges::uart] serial port was closed: peek IoError
+   ```
+   Sleeping for 0.1 seconds between an EC reset and starting wishbone-tool seems
+   to work reliably.
 
-   If Ctrl-c doesn't work and you see lots of debug messages about serial port
-   timeouts, wishbone-tool is attempting and failing to connect to the UART.
-   This probably means you need to re-build the EC gateware (`bt-ec.bin`) with
-   a different configuration (crossover UART is probably not enabled).
+5. On your Pi, find the wishbone bus address of the EC's `gitrev` register in
+   `precursors/csr.csv` (copied from `betrusted-ec/build/csr.csv`):
+   ```
+   $ cd ~/code/precursors
+   $ grep gitrev csr.csv
+   csr_register,git_gitrev,0xe0003000,1,ro
+   ```
+   In this example, the address is `0xe0003000`.
 
-   If the crossover UART didn't connect, you won't be able to use Ctrl-c to
-   kill wishbone-tool. In that case, make another terminal tab, SSH to another
-   shell on your Pi, and do this to kill the wishbone-tool process:
+6. On your Pi, switch the Debug Hat serial mux to `up5k` (the EC), reset the EC,
+   and use `wishbone-tool` to peek at the address for the git `gitrev` register:
+   ```
+   $ cd ~/code/betrusted-scripts
+   $ ./uart_up5k.sh
+   $ ./reset-ec.sh && sleep 0.1 && RUST_LOG=debug wishbone-tool --uart /dev/serial0 -b 115200 0xe0003000
+   INFO [wishbone_bridge::bridges::uart] Re-opened serial device /dev/serial0
+   DEBUG [wishbone_bridge::bridges::uart] Peeking @ e0003000
+   DEBUG [wishbone_bridge::bridges::uart] PEEK @ e0003000 = f635beec
+   Value at e0003000: f635beec
+   DEBUG [wishbone_bridge::bridges::uart] strong count: 2  weak count: 0
+   DEBUG [wishbone_tool] Exited MemoryAccess thread
+   DEBUG [wishbone_bridge::bridges::uart] strong count: 1  weak count: 0
+   DEBUG [wishbone_bridge::bridges::uart] serial_connect_thread requested exit
+   ```
+   In the example above, the git revision is `f635beec`.
+
+
+### Tunnel EC UART through wishbone-tool
+
+1. Make sure you can successfully complete the procedure above up to the point
+   of reading the `gitrev` value. If that works, you should be able to run
+   wishbone-tool without `RUST_LOG=debug` and assume that it will work.
+
+   If you start the serial bridge when there is a serial connectivity problem,
+   wishbone-tool can get into an error loop where it spends its time trying to
+   make a serial connection, to the point of neglecting to check the keyboard
+   input. In that case, pressing Ctrl-c will not stop wishbone-tool.
+
+   If that happens, you need to make a second SSH connection to the Pi, find the
+   process id for wishbone-tool with `ps x | grep wishbone` then do a
+   `kill $PID` (substituting the correct process id) break the wishbone-tool
+   process out of its infinite error loop. For example:
    ```
    $ ps x | grep wishbone-tool
    2139 pts/0    Sl+    0:00 wishbone-tool --serial /dev/serial0 -s terminal --csr-csv ../precursors/csr.csv
    2407 pts/1    S+     0:00 grep --color=auto wishbone-tool
    $ kill 2139
    ```
+
+2. On your build machine, edit `betrusted-ec/sw/Cargo.toml` to uncomment the
+   `debug_uart` default feature. The `[features]` section should have a line
+   like this:
+   ```
+   default = ["debug_uart"]
+   ```
+   Also, make sure that `debugonly = True` is set in `betrusted_ec.py`.
+
+3. Re-build your binaries, copy them to your Pi, and flash the EC binary with
+   `betrusted-scripts/config_up5k.sh`. Use the same procedures described above
+   in the section about testing wishbone-tool connectivity.
+
+4. On your Pi, reset the EC and start the wishbone-tool serial terminal bridge:
+   ```
+   cd ~/code/betrusted-scripts
+   ./uart_up5k.sh
+   ./reset-ec.sh && sleep 0.1 && wishbone-tool --serial /dev/serial0 -s terminal --csr-csv ../precursors/csr.csv
+   ```
+   To stop the wishbone-tool serial terminal, press Ctrl-c.
+
+You should see serial debug messages similar to this:
+```
+$ ./reset-ec.sh && sleep 0.06 && wishbone-tool --uart /dev/serial0 -b 115200 -s terminal --csr-csv ../precursors/csr.csv
+Hello world!
+before nommu
+i2c
+time_init
+i2c_init
+charger
+chg_set_safety
+gg_start
+chg_set_autoparams
+chg_start
+BtUsbCc:new
+tusb320lai_rev: 00000006
+usb_cc
+gyro_init
+backlight
+charger.update_regs
+spi_standby
+debug_uart selected: watchdog is not enabled
+main loop
+initializing wifi!
+enabling interrupt: mask 1 channel 5
+wf200 started!
+Wifi ready
+```
