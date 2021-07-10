@@ -14,6 +14,12 @@ help:
 bin: precursors $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE)
 	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
 
+# Reuse everything but the EC firmware
+.PHONY: fast-bin
+fast-bin:
+	cd betrusted-ec; cargo xtask hw-image
+	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
+
 # Build EC image
 $(UP5K_GATEWARE): betrusted-ec icestorm-tools ubuntu-packages rust-tools
 	cd betrusted-ec; python3 ./betrusted_ec.py --revision=pvt
