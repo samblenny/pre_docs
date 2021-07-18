@@ -5,6 +5,10 @@ LOADER=xous-core/target/riscv32imac-unknown-none-elf/release/loader.bin
 XC7S_GATEWARE=xous-core/precursors/soc_csr.bin
 UP5K_GATEWARE=betrusted-ec/target/riscv32i-unknown-none-elf/release/bt-ec.bin
 UP5K_CSR=betrusted-ec/build/csr.csv
+UP5K_SW=betrusted-ec/target/riscv32i-unknown-none-elf/release/sw
+OBJDUMP_SW=riscv64-unknown-elf-objdump -h $(UP5K_SW)
+SED_SW_TEXT_SIZE=sed -n 's/.*.text \+\([^ ]\+\).*/\1/p'
+TEXT_SIZE_PY3=print('EC sw .text size: 0x$${HEX_SIZE} =', 0x$$HEX_SIZE, 'bytes')
 
 help:
 	@echo Sorry, this is a work in progress.
@@ -13,12 +17,14 @@ help:
 # Build all the binaries and gather them into precursors/
 bin: precursors $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE)
 	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
+	@HEX_SIZE=`$(OBJDUMP_SW)|$(SED_SW_TEXT_SIZE)`; python3 -c "$(TEXT_SIZE_PY3)"
 
-# Reuse everything but the EC firmware
+# Build EC firmware and reuse other binaries (assumes you did a make bin earlier)
 .PHONY: fast-bin
 fast-bin:
 	cd betrusted-ec; cargo xtask hw-image
 	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
+	@HEX_SIZE=`$(OBJDUMP_SW)|$(SED_SW_TEXT_SIZE)`; python3 -c "$(TEXT_SIZE_PY3)"
 
 # Build EC image
 $(UP5K_GATEWARE): betrusted-ec icestorm-tools ubuntu-packages rust-tools
