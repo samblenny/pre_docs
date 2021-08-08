@@ -1,5 +1,7 @@
 # Automate build process for Precursor gateware & firmware images (for flashing)
 
+#HW_IMG=xous-core/target/riscv32imac-unknown-xous-elf/release/xous.img
+#LOADER=xous-core/target/riscv32imac-unknown-xous-elf/release/loader.bin
 HW_IMG=xous-core/target/riscv32imac-unknown-none-elf/release/xous.img
 LOADER=xous-core/target/riscv32imac-unknown-none-elf/release/loader.bin
 XC7S_GATEWARE=xous-core/precursors/soc_csr.bin
@@ -19,16 +21,22 @@ bin: precursors $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE)
 	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
 	@HEX_SIZE=`$(OBJDUMP_SW)|$(SED_SW_TEXT_SIZE)`; python3 -c "$(TEXT_SIZE_PY3)"
 
+# Build Xous firmware and loader, reusing other binaries
+.PHONY: fast-soc
+fast-soc:
+	cd xous-core; cargo xtask hw-image precursors/soc.svd
+	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
+
 # Build EC firmware and reuse other binaries (assumes you did a make bin earlier)
-.PHONY: fast-bin
-fast-bin:
+.PHONY: fast-ec
+fast-ec:
 	cd betrusted-ec; cargo xtask hw-image
 	cp $(HW_IMG) $(LOADER) $(XC7S_GATEWARE) $(UP5K_GATEWARE) $(UP5K_CSR) precursors/
 	@HEX_SIZE=`$(OBJDUMP_SW)|$(SED_SW_TEXT_SIZE)`; python3 -c "$(TEXT_SIZE_PY3)"
 
 # Build EC image
 $(UP5K_GATEWARE): betrusted-ec icestorm-tools ubuntu-packages rust-tools
-	cd betrusted-ec; python3 ./betrusted_ec.py --revision=pvt
+	cd betrusted-ec; python3 ./betrusted_ec.py --revision=pvt --seed=1
 	cd betrusted-ec; cargo xtask copy-precursors
 	cd betrusted-ec; cargo xtask hw-image
 
