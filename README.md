@@ -1,4 +1,7 @@
-# pre_docs
+# 2022-02-15: THIS REPO IS OUT OF DATE
+
+**The notes in this repository were written for an old version of the Precursor software**
+**stack. Most of this is out of date now. For current info, check the official wiki.**
 
 Unofficial developer documentation for Precursor.
 
